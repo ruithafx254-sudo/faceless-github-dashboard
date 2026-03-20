@@ -1,1 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Faceless Video Dashboard</title>
+<style>
+body { font-family: Arial; background:#0f172a; color:white; text-align:center; padding:50px; }
+input, button { padding:10px; margin:10px; border-radius:8px; border:none; font-size:16px; }
+button { background:#22c55e; color:black; cursor:pointer; }
+#log { text-align:left; margin:20px auto; width:80%; max-height:400px; overflow:auto; background:#1e293b; padding:10px; border-radius:8px; }
+</style>
+</head>
+<body>
 
+<h1>Faceless Video Automation</h1>
+
+<label>Topic (optional):</label>
+<input id="topic" placeholder="space, history, psychology..." />
+
+<label>Number of videos per channel (1–5):</label>
+<input id="count" type="number" value="1" min="1" max="5" />
+
+<label>Channels (comma-separated JSONs):</label>
+<input id="channels" placeholder="channel1.json,channel2.json" />
+
+<br>
+<button onclick="generateVideos()">Generate & Upload</button>
+
+<h3>Log:</h3>
+<div id="log"></div>
+
+<script>
+const logDiv = document.getElementById('log');
+
+function appendLog(msg){
+  const p = document.createElement('p');
+  p.innerText = `[${new Date().toLocaleTimeString()}] ${msg}`;
+  logDiv.appendChild(p);
+  logDiv.scrollTop = logDiv.scrollHeight;
+}
+
+async function generateVideos(){
+  const topic = document.getElementById('topic').value;
+  const count = parseInt(document.getElementById('count').value);
+  const channels = document.getElementById('channels').value.split(',').map(c=>c.trim());
+
+  if(!channels.length){
+    appendLog("Enter at least one channel JSON file.");
+    return;
+  }
+
+  appendLog("Starting video generation...");
+
+  for(let i=0; i<count; i++){
+    for(let channel of channels){
+      appendLog(`Generating video ${i+1} for ${channel}...`);
+      // This will call your backend later
+      appendLog(`✅ Video would be generated and uploaded to ${channel}`);
+      await new Promise(r => setTimeout(r, 2000)); // simulate delay
+    }
+  }
+
+  appendLog("All videos generated and uploaded.");
+}
+</script>
+
+</body>
+</html>
