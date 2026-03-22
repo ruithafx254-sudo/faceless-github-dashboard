@@ -1,1 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Binance | Portfolio Overview</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --b-black: #0b0e11;
+            --b-gray: #1e2329;
+            --b-yellow: #f0b90b;
+            --b-text: #eaecef;
+            --b-muted: #848e9c;
+            --b-border: #2b3139;
+            --b-green: #02c076;
+            --b-red: #f84960;
+        }
 
+        body {
+            background-color: var(--b-black);
+            color: var(--b-text);
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Top Price Ticker */
+        .ticker-bar {
+            width: 100%;
+            background: #181a20;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--b-border);
+            overflow: hidden;
+            white-space: nowrap;
+            font-size: 12px;
+            color: var(--b-muted);
+        }
+
+        .ticker-content {
+            display: inline-block;
+            animation: scroll 20s linear infinite;
+        }
+
+        @keyframes scroll {
+            from { transform: translateX(100%); }
+            to { transform: translateX(-100%); }
+        }
+
+        .ticker-item { margin: 0 15px; }
+        .up { color: var(--b-green); }
+
+        /* Main Container */
+        .app-container {
+            width: 100%;
+            max-width: 450px;
+            padding: 20px;
+            box-sizing: border-box;
+            padding-bottom: 100px; /* Space for nav */
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .profile-icon {
+            width: 32px;
+            height: 32px;
+            background: var(--b-gray);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+        }
+
+        /* Wallet Card */
+        .wallet-card {
+            background: var(--b-gray);
+            border-radius: 20px;
+            padding: 24px;
+            margin-bottom: 25px;
+            border: 1px solid var(--b-border);
+        }
+
+        .balance-label {
+            font-size: 13px;
+            color: var(--b-muted);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+
+        .eye-icon { cursor: pointer; font-size: 16px; }
+
+        .main-balance {
+            font-size: 30px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            margin-bottom: 4px;
+        }
+
+        .sub-balance {
+            font-size: 16px;
+            color: var(--b-muted);
+            font-weight: 500;
+        }
+
+        /* Action Buttons */
+        .action-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-top: 24px;
+        }
+
+        .btn {
+            border: none;
+            padding: 12px;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 13px;
+            cursor: pointer;
+            transition: 0.2s;
+            text-align: center;
+        }
+
+        .btn-yellow { background: var(--b-yellow); color: #000; }
+        .btn-yellow:hover { background: #d9a508; }
+        .btn-gray { background: #474d57; color: var(--b-text); }
+        .btn-gray:hover { background: #565e6a; }
+
+        /* Asset List */
+        .section-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .asset-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 0;
+            border-bottom: 1px solid #1e2329;
+        }
+
+        .asset-info { display: flex; align-items: center; gap: 12px; }
+        .asset-icon {
+            width: 36px;
+            height: 36px;
+            background: #2b3139;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 12px;
+        }
+
+        .asset-name-main { font-weight: 600; font-size: 15px; }
+        .asset-name-sub { font-size: 12px; color: var(--b-muted); }
+
+        .asset-price { text-align: right; }
+        .price-main { font-weight: 600; font-size: 15px; }
+        .price-sub { font-size: 12px; color: var(--b-muted); }
+
+        /* Bottom Nav */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            max-width: 450px;
+            background: #181a20;
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            padding: 12px 0;
+            border-top: 1px solid var(--b-border);
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-size: 10px;
+            color: var(--b-muted);
+            gap: 4px;
+        }
+        .nav-active { color: var(--b-yellow); }
+    </style>
+</head>
+<body>
+
+    <div class="ticker-bar">
+        <div class="ticker-content">
+            <span class="ticker-item">BTC/USDT <span class="up">$67,432.10 (+2.4%)</span></span>
+            <span class="ticker-item">ETH/USDT <span class="up">$3,842.15 (+1.8%)</span></span>
+            <span class="ticker-item">BNB/USDT <span class="up">$592.40 (+4.1%)</span></span>
+            <span class="ticker-item">SOL/USDT <span class="up">$145.12 (+0.5%)</span></span>
+        </div>
+    </div>
+
+    <div class="app-container">
+        <header>
+            <div class="profile-icon">👤</div>
+            <div style="font-weight: 700;">Portfolio</div>
+            <div style="font-size: 20px;">🔔</div>
+        </header>
+
+        <div class="wallet-card">
+            <div class="balance-label">
+                Total Equity 
+                <span class="eye-icon" onclick="toggleSecret()" id="eye-icon">👁️</span>
+            </div>
+            <div class="main-balance" id="main-bal">1.45028374 BTC</div>
+            <div class="sub-balance" id="sub-bal">≈ $97,801.45</div>
+
+            <div class="action-grid">
+                <button class="btn btn-yellow">Deposit</button>
+                <button class="btn btn-gray">Withdraw</button>
+                <button class="btn btn-gray">Transfer</button>
+            </div>
+        </div>
+
+        <div class="section-title">
+            <span>Assets</span>
+            <span style="font-size: 12px; color: var(--b-yellow);">Edit</span>
+        </div>
+
+        <div class="asset-row">
+            <div class="asset-info">
+                <div class="asset-icon" style="color: #f3ba2f;">₿</div>
+                <div>
+                    <div class="asset-name-main">BTC</div>
+                    <div class="asset-name-sub">Bitcoin</div>
+                </div>
+            </div>
+            <div class="asset-price">
+                <div class="price-main">0.85000000</div>
+                <div class="price-sub">$57,317.28</div>
+            </div>
+        </div>
+
+        <div class="asset-row">
+            <div class="asset-info">
+                <div class="asset-icon" style="color: #627eea;">Ξ</div>
+                <div>
+                    <div class="asset-name-main">ETH</div>
+                    <div class="asset-name-sub">Ethereum</div>
+                </div>
+            </div>
+            <div class="asset-price">
+                <div class="price-main">8.42019200</div>
+                <div class="price-sub">$32,351.40</div>
+            </div>
+        </div>
+
+        <div class="asset-row">
+            <div class="asset-info">
+                <div class="asset-icon" style="color: #26a17b;">₮</div>
+                <div>
+                    <div class="asset-name-main">USDT</div>
+                    <div class="asset-name-sub">Tether</div>
+                </div>
+            </div>
+            <div class="asset-price">
+                <div class="price-main">8,132.77</div>
+                <div class="price-sub">$8,132.77</div>
+            </div>
+        </div>
+    </div>
+
+    <nav class="bottom-nav">
+        <div class="nav-item">🏠<br>Home</div>
+        <div class="nav-item">📈<br>Markets</div>
+        <div class="nav-item">🔄<br>Trade</div>
+        <div class="nav-item">💎<br>Futures</div>
+        <div class="nav-item nav-active">💼<br>Wallets</div>
+    </nav>
+
+    <script>
+        let isSecret = false;
+        const btcValue = "1.45028374 BTC";
+        const usdValue = "≈ $97,801.45";
+
+        function toggleSecret() {
+            const m = document.getElementById('main-bal');
+            const s = document.getElementById('sub-bal');
+            const icon = document.getElementById('eye-icon');
+
+            if (!isSecret) {
+                m.innerText = "********";
+                s.innerText = "********";
+                icon.innerText = "🔒";
+            } else {
+                m.innerText = btcValue;
+                s.innerText = usdValue;
+                icon.innerText = "👁️";
+            }
+            isSecret = !isSecret;
+        }
+    </script>
+</body>
+</html>
